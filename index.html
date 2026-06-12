@@ -589,6 +589,8 @@ const STATUS_SUGGESTIONS = [
   { name:"생리", color:"#7A0010" },
   { name:"체함", color:"#BCBAB6" },
   { name:"두통", color:"#BCBAB6" },
+  { name:"👀", color:"#B89EE0" },
+  { name:"👀👀", color:"#B89EE0" },
 ];
 // 하트로 표시할 항목
 const isHeart = (name) => name === "사랑일" || name === "가임기" || name === "생리";
@@ -1515,7 +1517,7 @@ function RecordSheet({ dateKey, record, onClose, onSave, onDelete }) {
   };
   const removeMeal = (i) => setMeals(meals.filter((_,idx)=>idx!==i));
 
-  const suggestions = ["PT","헬스","팔운동","👀","산책","러닝","등산"]
+  const suggestions = ["PT","헬스","팔운동","산책","러닝","등산"]
     .filter(x => !workouts.find(w=>w.name===x));
 
   const save = () => {
