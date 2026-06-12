@@ -589,8 +589,8 @@ const STATUS_SUGGESTIONS = [
   { name:"생리", color:"#7A0010" },
   { name:"체함", color:"#BCBAB6" },
   { name:"두통", color:"#BCBAB6" },
-  { name:"👀", color:"#B89EE0" },
-  { name:"👀👀", color:"#B89EE0" },
+  { name:"👀", color:"#B89EE0", bgColor:"transparent" },
+  { name:"👀👀", color:"#B89EE0", bgColor:"transparent" },
 ];
 // 하트로 표시할 항목
 const isHeart = (name) => name === "사랑일" || name === "가임기" || name === "생리";
@@ -1494,10 +1494,11 @@ function RecordSheet({ dateKey, record, onClose, onSave, onDelete }) {
   }, []);
 
   const close = () => { setEnter(false); setTimeout(onClose, 180); };
-  const addStatus = (name, color = statusColor) => {
+  const addStatus = (name, color = statusColor, bgColor = undefined) => {
     const v = name.trim(); if (!v) return;
     if (statusList.find(s => s.name===v)) { setStatusDraft(""); return; }
-    setStatusList(prev => [...prev, { name:v, color }]); setStatusDraft("");
+    const entry = bgColor !== undefined ? { name:v, color, bgColor } : { name:v, color };
+    setStatusList(prev => [...prev, entry]); setStatusDraft("");
   };
   const removeStatus = (i) => setStatusList(prev => prev.filter((_,idx)=>idx!==i));
 
@@ -1603,7 +1604,7 @@ function RecordSheet({ dateKey, record, onClose, onSave, onDelete }) {
               {/* 추가된 태그들 */}
               <div style={s.tagChipRow}>
                 {statusList.map((st, i) => (
-                  <span key={i} style={{ ...s.tag, background:st.color+"20", color:darken(st.color) }}>
+                  <span key={i} style={{ ...s.tag, background:st.bgColor !== undefined ? st.bgColor : st.color+"20", color:darken(st.color) }}>
                     {isHeart(st.name) ? <HeartDot color={darken(st.color)} size={11}/> : isStar(st.name) ? <PeriodSquare size={10}/> : <span style={{ width:6, height:6, borderRadius:999, background:darken(st.color), display:'inline-block', flexShrink:0 }}/>}
                     {st.name}
                     <button onClick={()=>removeStatus(i)} style={{ ...s.tagX, color:darken(st.color) }}><Icon name="x" size={12}/></button>
@@ -1637,7 +1638,7 @@ function RecordSheet({ dateKey, record, onClose, onSave, onDelete }) {
             {STATUS_SUGGESTIONS.filter(sg => !statusList.find(s=>s.name===sg.name)).length > 0 && (
               <div style={s.suggestRow}>
                 {STATUS_SUGGESTIONS.filter(sg => !statusList.find(s=>s.name===sg.name)).map(sg => (
-                  <button key={sg.name} onClick={() => addStatus(sg.name, sg.color)} style={s.suggestChip}>
+                  <button key={sg.name} onClick={() => addStatus(sg.name, sg.color, sg.bgColor)} style={s.suggestChip}>
                     <Icon name="plus" size={12}/> {sg.name}
                   </button>
                 ))}
